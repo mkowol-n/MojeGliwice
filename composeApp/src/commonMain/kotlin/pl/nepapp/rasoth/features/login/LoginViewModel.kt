@@ -3,7 +3,6 @@ package pl.nepapp.rasoth.features.login
 import kotlinx.coroutines.delay
 import org.koin.core.annotation.KoinViewModel
 import pl.nepapp.rasoth.core.feature.BaseViewModel
-import pl.nepapp.rasoth.core.ui.UiText
 import pl.nepapp.rasoth.core.ui.input.InputFieldState
 import pl.nepapp.rasoth.core.ui.input.validators.EmailValidator
 import pl.nepapp.rasoth.core.ui.input.validators.PasswordValidator
@@ -11,23 +10,14 @@ import pl.nepapp.rasoth.core.ui.input.validators.PasswordValidator
 
 data class LoginState(
     val isLoading: Boolean = false,
+    val emailField: InputFieldState = InputFieldState(validator = EmailValidator()),
+    val passwordField: InputFieldState = InputFieldState(validator = PasswordValidator())
 )
 
 @KoinViewModel
 class LoginViewModel : BaseViewModel<LoginState, Nothing>(LoginState()) {
 
-    val emailField = InputFieldState(validator = EmailValidator())
-    val passwordField = InputFieldState(validator = PasswordValidator())
-
     fun login() = intent {
-        emailField.showErrors()
-        passwordField.showErrors()
-
-        val emailValid = emailField.validate()
-        val passwordValid = passwordField.validate()
-
-        if (!emailValid || !passwordValid) return@intent
-
         reduce { state.copy(isLoading = true) }
 
         delay(5000)

@@ -61,7 +61,7 @@ private fun LoginContent(viewModel: LoginViewModel = koinViewModel()) {
         Spacer(modifier = Modifier.height(32.dp))
 
         BaseInputField(
-            state = viewModel.emailField,
+            state = state.emailField,
             label = stringResource(Res.string.email_label),
             placeholder = stringResource(Res.string.email_placeholder),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
@@ -71,7 +71,7 @@ private fun LoginContent(viewModel: LoginViewModel = koinViewModel()) {
         Spacer(modifier = Modifier.height(16.dp))
 
         BaseInputField(
-            state = viewModel.passwordField,
+            state = state.passwordField,
             label = stringResource(Res.string.password_label),
             placeholder = stringResource(Res.string.password_placeholder),
             isPassword = true,
