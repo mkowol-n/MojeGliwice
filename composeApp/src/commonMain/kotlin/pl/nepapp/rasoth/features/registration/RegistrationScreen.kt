@@ -1,8 +1,6 @@
-package pl.nepapp.rasoth.features.login
+package pl.nepapp.rasoth.features.registration
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -13,44 +11,41 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import kotlinx.serialization.Serializable
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import org.orbitmvi.orbit.compose.collectAsState
 import pl.nepapp.rasoth.core.navigation.BaseScreen
-import pl.nepapp.rasoth.core.navigation.LocalNavigator
 import pl.nepapp.rasoth.core.ui.input.BaseInputField
-import pl.nepapp.rasoth.features.registration.RegistrationScreen
-import org.jetbrains.compose.resources.stringResource
 import rasoth.composeapp.generated.resources.Res
 import rasoth.composeapp.generated.resources.email_label
 import rasoth.composeapp.generated.resources.email_placeholder
-import rasoth.composeapp.generated.resources.login_button
-import rasoth.composeapp.generated.resources.no_account_prompt
 import rasoth.composeapp.generated.resources.password_label
 import rasoth.composeapp.generated.resources.password_placeholder
 import rasoth.composeapp.generated.resources.register_button
+import rasoth.composeapp.generated.resources.register_title
+import rasoth.composeapp.generated.resources.repeat_password_label
+import rasoth.composeapp.generated.resources.repeat_password_placeholder
 
 @Serializable
-data object LoginScreen : BaseScreen {
+data object RegistrationScreen : BaseScreen {
     @Composable
     override fun Content() {
-        LoginContent()
+        RegistrationContent()
     }
 }
 
 @Suppress("ParamsComparedByRef")
 @Composable
-private fun LoginContent(viewModel: LoginViewModel = koinViewModel()) {
+private fun RegistrationContent(viewModel: RegistrationViewModel = koinViewModel()) {
     val state by viewModel.collectAsState()
-    val navigator = LocalNavigator.current
 
     Column(
         modifier = Modifier
@@ -62,7 +57,7 @@ private fun LoginContent(viewModel: LoginViewModel = koinViewModel()) {
         Spacer(modifier = Modifier.height(64.dp))
 
         Text(
-            text = stringResource(Res.string.login_button),
+            text = stringResource(Res.string.register_title),
             style = MaterialTheme.typography.headlineMedium,
         )
 
@@ -86,10 +81,20 @@ private fun LoginContent(viewModel: LoginViewModel = koinViewModel()) {
             modifier = Modifier.fillMaxWidth(),
         )
 
+        Spacer(modifier = Modifier.height(16.dp))
+
+        BaseInputField(
+            state = state.repeatPasswordField,
+            label = stringResource(Res.string.repeat_password_label),
+            placeholder = stringResource(Res.string.repeat_password_placeholder),
+            isPassword = true,
+            modifier = Modifier.fillMaxWidth(),
+        )
+
         Spacer(modifier = Modifier.height(24.dp))
 
         Button(
-            onClick = { viewModel.login() },
+            onClick = { viewModel.register() },
             modifier = Modifier.fillMaxWidth(),
             enabled = !state.isLoading,
         ) {
@@ -99,22 +104,6 @@ private fun LoginContent(viewModel: LoginViewModel = koinViewModel()) {
                     color = MaterialTheme.colorScheme.onPrimary,
                 )
             } else {
-                Text(text = stringResource(Res.string.login_button))
-            }
-        }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Text(
-                text = stringResource(Res.string.no_account_prompt),
-                style = MaterialTheme.typography.bodyMedium,
-            )
-            TextButton(onClick = { navigator?.push(RegistrationScreen) }) {
                 Text(text = stringResource(Res.string.register_button))
             }
         }

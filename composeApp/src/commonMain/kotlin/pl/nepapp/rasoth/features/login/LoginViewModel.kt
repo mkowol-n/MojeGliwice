@@ -18,12 +18,19 @@ data class LoginState(
 class LoginViewModel : BaseViewModel<LoginState, Nothing>(LoginState()) {
 
     fun login() = intent {
+        state.emailField.showErrors()
+        state.passwordField.showErrors()
+
+        val isEmailValid = state.emailField.validate()
+        val isPasswordValid = state.passwordField.validate()
+        if (!isEmailValid || !isPasswordValid) return@intent
+
         reduce { state.copy(isLoading = true) }
 
         delay(5000)
         // Simulate API call — in real app this would call a repository
         // Example of setting a server-side error:
-        // emailField.setError(UiText.Raw("Email already exists"))
+        // state.emailField.setError(UiText.Raw("Email already exists"))
 
         reduce { state.copy(isLoading = false) }
     }
