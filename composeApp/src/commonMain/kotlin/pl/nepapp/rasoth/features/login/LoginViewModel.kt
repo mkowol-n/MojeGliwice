@@ -13,10 +13,8 @@ data class LoginState(
     val isLoading: Boolean = false,
 )
 
-sealed interface LoginSideEffect
-
 @KoinViewModel
-class LoginViewModel : BaseViewModel<LoginState, LoginSideEffect>(LoginState()) {
+class LoginViewModel : BaseViewModel<LoginState, Nothing>(LoginState()) {
 
     val emailField = InputFieldState(validator = EmailValidator())
     val passwordField = InputFieldState(validator = PasswordValidator())
