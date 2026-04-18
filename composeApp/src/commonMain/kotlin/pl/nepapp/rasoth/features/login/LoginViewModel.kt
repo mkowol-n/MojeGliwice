@@ -1,5 +1,6 @@
 package pl.nepapp.rasoth.features.login
 
+import kotlinx.coroutines.delay
 import org.koin.core.annotation.KoinViewModel
 import pl.nepapp.rasoth.core.feature.BaseViewModel
 import pl.nepapp.rasoth.core.ui.UiText
@@ -31,6 +32,7 @@ class LoginViewModel : BaseViewModel<LoginState, LoginSideEffect>(LoginState()) 
 
         reduce { state.copy(isLoading = true) }
 
+        delay(5000)
         // Simulate API call — in real app this would call a repository
         // Example of setting a server-side error:
         // emailField.setError(UiText.Raw("Email already exists"))
