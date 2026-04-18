@@ -1,53 +1,97 @@
 package pl.nepapp.rasoth.features.login
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeContentPadding
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.ui.unit.dp
 import kotlinx.serialization.Serializable
-import org.jetbrains.compose.resources.painterResource
-import pl.nepapp.rasoth.Greeting
+import org.koin.compose.viewmodel.koinViewModel
+import org.orbitmvi.orbit.compose.collectAsState
 import pl.nepapp.rasoth.core.navigation.BaseScreen
+import pl.nepapp.rasoth.core.ui.input.BaseInputField
+import org.jetbrains.compose.resources.stringResource
 import rasoth.composeapp.generated.resources.Res
-import rasoth.composeapp.generated.resources.compose_multiplatform
+import rasoth.composeapp.generated.resources.email_label
+import rasoth.composeapp.generated.resources.email_placeholder
+import rasoth.composeapp.generated.resources.login_button
+import rasoth.composeapp.generated.resources.password_label
+import rasoth.composeapp.generated.resources.password_placeholder
 
 @Serializable
-data object LoginScreen: BaseScreen {
+data object LoginScreen : BaseScreen {
     @Composable
     override fun Content() {
-        var showContent by remember { mutableStateOf(false) }
-        Column(
-            modifier = Modifier
-                .background(MaterialTheme.colorScheme.primaryContainer)
-                .safeContentPadding()
-                .fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally,
+        LoginContent()
+    }
+}
+
+@Suppress("ParamsComparedByRef")
+@Composable
+private fun LoginContent(viewModel: LoginViewModel = koinViewModel()) {
+    val state by viewModel.collectAsState()
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .safeContentPadding()
+            .padding(horizontal = 24.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        Spacer(modifier = Modifier.height(64.dp))
+
+        Text(
+            text = stringResource(Res.string.login_button),
+            style = MaterialTheme.typography.headlineMedium,
+        )
+
+        Spacer(modifier = Modifier.height(32.dp))
+
+        BaseInputField(
+            state = viewModel.emailField,
+            label = stringResource(Res.string.email_label),
+            placeholder = stringResource(Res.string.email_placeholder),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
+            modifier = Modifier.fillMaxWidth(),
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        BaseInputField(
+            state = viewModel.passwordField,
+            label = stringResource(Res.string.password_label),
+            placeholder = stringResource(Res.string.password_placeholder),
+            isPassword = true,
+            modifier = Modifier.fillMaxWidth(),
+        )
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        Button(
+            onClick = { viewModel.login() },
+            modifier = Modifier.fillMaxWidth(),
+            enabled = !state.isLoading,
         ) {
-            Button(onClick = { showContent = !showContent }) {
-                Text("Click me!")
-            }
-            AnimatedVisibility(showContent) {
-                val greeting = remember { Greeting().greet() }
-                Column(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                ) {
-                    Image(painterResource(Res.drawable.compose_multiplatform), null)
-                    Text("Compose: $greeting")
-                }
+            if (state.isLoading) {
+                CircularProgressIndicator(
+                    modifier = Modifier,
+                    color = MaterialTheme.colorScheme.onPrimary,
+                )
+            } else {
+                Text(text = stringResource(Res.string.login_button))
             }
         }
     }

@@ -1,0 +1,14 @@
+<resources>
+    <string name="field_required">This field is required</string>
+    <string name="invalid_email">Please enter a valid email address</string>
+    <string name="password_too_short">Password must be at least 8 characters</string>
+    <string name="password_needs_digit">Password must contain at least one digit</string>
+    <string name="password_needs_lowercase">Password must contain at least one lowercase letter</string>
+    <string name="password_needs_uppercase">Password must contain at least one uppercase letter</string>
+    <string name="password_needs_special_char">Password must contain at least one special character</string>
+    <string name="email_label">Email</string>
+    <string name="password_label">Password</string>
+    <string name="login_button">Log in</string>
+    <string name="email_placeholder">Enter your email</string>
+    <string name="password_placeholder">Enter your password</string>
+</resources>
