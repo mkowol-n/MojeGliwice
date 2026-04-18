@@ -1,21 +1,7 @@
 package pl.nepapp.rasoth.core.navigation
 
-import androidx.compose.animation.AnimatedContentTransitionScope
-import androidx.compose.animation.ContentTransform
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Stable
-import androidx.compose.runtime.remember
-import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import androidx.navigation3.runtime.NavBackStack
-import androidx.navigation3.runtime.NavEntry
-import androidx.navigation3.runtime.rememberNavBackStack
-import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
-import androidx.navigation3.scene.Scene
-import androidx.navigation3.ui.NavDisplay
-import androidx.savedstate.serialization.SavedStateConfiguration
-import kotlinx.collections.immutable.ImmutableList
-import pl.nepapp.rasoth.core.navigation.BaseScreen
 
 @Stable
 class Navigation(
@@ -32,13 +18,13 @@ class Navigation(
         }
 
     fun pop() {
-        if (navigator.isNotEmpty()) {
+        if (navigator.size > 1) {
             navigator.removeAt(navigator.size - 1)
         }
     }
 
     fun popAll() {
-        navigator.clear()
+        popUntilRoot()
     }
 
     fun popUntil(predicate: (BaseScreen) -> Boolean): Boolean {
@@ -84,12 +70,26 @@ class Navigation(
     }
 
     fun replaceAll(item: BaseScreen) {
-        navigator.clear()
-        navigator.add(item)
+        while (navigator.size > 1) {
+            navigator.removeAt(navigator.size - 1)
+        }
+        if (navigator.isNotEmpty()) {
+            navigator[0] = item
+        } else {
+            navigator.add(item)
+        }
     }
 
     fun replaceAll(items: List<BaseScreen>) {
-        navigator.clear()
-        navigator.addAll(items)
+        require(items.isNotEmpty()) { "Cannot replaceAll with empty list" }
+        while (navigator.size > 1) {
+            navigator.removeAt(navigator.size - 1)
+        }
+        if (navigator.isNotEmpty()) {
+            navigator[0] = items.first()
+        } else {
+            navigator.add(items.first())
+        }
+        navigator.addAll(items.drop(1))
     }
 }
