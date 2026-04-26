@@ -2,6 +2,7 @@ package pl.nepapp.rasoth.features.login
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -11,29 +12,39 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeContentPadding
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 import org.koin.compose.viewmodel.koinViewModel
 import org.orbitmvi.orbit.compose.collectAsState
+import pl.nepapp.rasoth.core.auth.SocialAuthClient
 import pl.nepapp.rasoth.core.navigation.BaseScreen
 import pl.nepapp.rasoth.core.navigation.LocalNavigator
 import pl.nepapp.rasoth.core.ui.input.BaseInputField
 import pl.nepapp.rasoth.features.registration.RegistrationScreen
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.koinInject
+import pl.nepapp.rasoth.core.auth.rememberSocialAuthClient
 import rasoth.composeapp.generated.resources.Res
 import rasoth.composeapp.generated.resources.email_label
 import rasoth.composeapp.generated.resources.email_placeholder
+import rasoth.composeapp.generated.resources.login_apple_button
 import rasoth.composeapp.generated.resources.login_button
+import rasoth.composeapp.generated.resources.login_facebook_button
+import rasoth.composeapp.generated.resources.login_google_button
 import rasoth.composeapp.generated.resources.no_account_prompt
+import rasoth.composeapp.generated.resources.or_continue_with
 import rasoth.composeapp.generated.resources.password_label
 import rasoth.composeapp.generated.resources.password_placeholder
 import rasoth.composeapp.generated.resources.register_button
@@ -48,9 +59,25 @@ data object LoginScreen : BaseScreen {
 
 @Suppress("ParamsComparedByRef")
 @Composable
-private fun LoginContent(viewModel: LoginViewModel = koinViewModel()) {
+private fun LoginContent(
+    viewModel: LoginViewModel = koinViewModel(),
+) {
     val state by viewModel.collectAsState()
     val navigator = LocalNavigator.current
+    val coroutineScope = rememberCoroutineScope()
+    val socialAuthClient = rememberSocialAuthClient()
+
+    fun launchProviderLogin(provider: SocialProvider) {
+        coroutineScope.launch {
+            socialAuthClient.signInWithProvider(provider)?.let {
+                viewModel.loginWithSocial(
+                    provider = provider,
+                    firebaseIdToken = it.firebaseIdToken,
+                    firebaseAccessToken = it.firebaseAccessToken
+                )
+            }
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -101,6 +128,51 @@ private fun LoginContent(viewModel: LoginViewModel = koinViewModel()) {
             } else {
                 Text(text = stringResource(Res.string.login_button))
             }
+        }
+
+        Spacer(modifier = Modifier.height(24.dp))
+        HorizontalDivider(modifier = Modifier.fillMaxWidth())
+        Spacer(modifier = Modifier.height(16.dp))
+        Text(
+            text = stringResource(Res.string.or_continue_with),
+            style = MaterialTheme.typography.bodyMedium,
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+
+        val contentPadding = PaddingValues(vertical = 12.dp)
+
+        Button(
+            onClick = {
+                launchProviderLogin(SocialProvider.GOOGLE)
+            },
+            modifier = Modifier.fillMaxWidth(),
+            contentPadding = contentPadding,
+        ) {
+            Text(stringResource(Res.string.login_google_button))
+        }
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        Button(
+            onClick = {
+                launchProviderLogin(SocialProvider.FACEBOOK)
+            },
+            modifier = Modifier.fillMaxWidth(),
+            contentPadding = contentPadding,
+        ) {
+            Text(stringResource(Res.string.login_facebook_button))
+        }
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        Button(
+            onClick = {
+                launchProviderLogin(SocialProvider.APPLE_ID)
+            },
+            modifier = Modifier.fillMaxWidth(),
+            contentPadding = contentPadding,
+        ) {
+            Text(stringResource(Res.string.login_apple_button))
         }
 
         state.authError?.let { authError ->

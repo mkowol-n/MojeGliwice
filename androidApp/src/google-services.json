@@ -12,7 +12,12 @@
           "package_name": "pl.nepapp.rasoth"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "157686218738-rll7hhu2ju4sjhce60tdhj3343e9o3eq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyBoD7d9CucLUO8PR5ujFleR-YdJILZBLBw"
@@ -20,7 +25,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "157686218738-rll7hhu2ju4sjhce60tdhj3343e9o3eq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

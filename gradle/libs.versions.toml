@@ -28,6 +28,7 @@ koinPlugin = "0.6.2"
 firebaseBom = "34.12.0"
 googleServices = "4.4.4"
 firebaseCrashlyticsPlugin = "3.0.7"
+coroutines = "1.10.2"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -74,6 +75,7 @@ symbol-processing-api = { module = "com.google.devtools.ksp:symbol-processing-ap
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
 firebase-auth = { group = "com.google.firebase", name = "firebase-auth" }
 firebase-crashlytics = { group = "com.google.firebase", name = "firebase-crashlytics" }
+kotlinx-coroutines-play-services = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-play-services", version.ref = "coroutines" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

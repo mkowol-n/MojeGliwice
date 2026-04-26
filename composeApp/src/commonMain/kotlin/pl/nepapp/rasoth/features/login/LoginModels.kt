@@ -18,8 +18,8 @@ sealed interface LoginRequest {
     ) : LoginRequest
 }
 
-enum class SocialProvider(val apiValue: String) {
-    GOOGLE("google"),
-    FACEBOOK("facebook"),
-    APPLE_ID("appleid"),
+enum class SocialProvider(val apiValue: String, val firebaseProvider: String) {
+    GOOGLE("google", firebaseProvider = "google.com"),
+    FACEBOOK("facebook", firebaseProvider = "facebook.com"),
+    APPLE_ID("appleid", firebaseProvider = "apple.com"),
 }

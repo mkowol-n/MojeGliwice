@@ -21,4 +21,12 @@
     <string name="login_error_user_not_found">No account found for this email</string>
     <string name="login_error_network">Network error. Please try again</string>
     <string name="login_error_unknown">Could not sign in. Please try again</string>
+    <string name="or_continue_with">or continue with</string>
+    <string name="login_google_button">Continue with Google</string>
+    <string name="login_facebook_button">Continue with Facebook</string>
+    <string name="login_apple_button">Continue with Apple</string>
+    <string name="login_error_social_cancelled">Social sign in was cancelled</string>
+    <string name="login_error_social_failed">Could not sign in with provider. Please try again</string>
+    <string name="login_error_social_unsupported">Social sign in is not supported on this device</string>
+    <string name="firebase_auth_base_error">Failed to login with firebase</string>
 </resources>

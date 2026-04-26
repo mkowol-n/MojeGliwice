@@ -72,6 +72,7 @@ kotlin {
             implementation(project.dependencies.platform(libs.firebase.bom))
             implementation(libs.firebase.auth)
             implementation(libs.firebase.crashlytics)
+            implementation(libs.kotlinx.coroutines.play.services)
         }
     }
 }

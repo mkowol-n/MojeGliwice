@@ -34,7 +34,18 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+    signingConfigs {
+        create("testSigning") {
+            storeFile = rootProject.file("testSigning.jks")
+            storePassword = "P@ssw0rd"
+            keyAlias = "rasoth"
+            keyPassword = "P@ssw0rd"
+        }
+    }
     buildTypes {
+        getByName("debug") {
+            signingConfig = signingConfigs.getByName("testSigning")
+        }
         getByName("release") {
             isMinifyEnabled = false
         }

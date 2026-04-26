@@ -1,14 +1,20 @@
 package pl.nepapp.rasoth.features.login
 
 import org.koin.core.annotation.KoinViewModel
+import pl.nepapp.rasoth.core.auth.SocialAuthClient
 import pl.nepapp.rasoth.core.feature.Async
+import pl.nepapp.rasoth.core.feature.Fail
+import pl.nepapp.rasoth.core.feature.Loading
 import pl.nepapp.rasoth.core.feature.BaseViewModel
+import pl.nepapp.rasoth.core.feature.Success
 import pl.nepapp.rasoth.core.feature.Uninitialized
 import pl.nepapp.rasoth.core.feature.async
 import pl.nepapp.rasoth.core.ui.UiText
 import pl.nepapp.rasoth.core.ui.input.InputFieldState
 import pl.nepapp.rasoth.core.ui.input.validators.EmailValidator
 import pl.nepapp.rasoth.core.ui.input.validators.PasswordValidator
+import rasoth.composeapp.generated.resources.Res
+import rasoth.composeapp.generated.resources.login_error_unknown
 
 
 data class LoginState(
@@ -32,63 +38,41 @@ class LoginViewModel(
         val isPasswordValid = state.passwordField.validate()
         if (!isEmailValid || !isPasswordValid) return@intent
 
-        async {
-            loginUseCase(
-                LoginRequest.Password(
-                    email = state.emailField.text.trim(),
-                    password = state.passwordField.text,
-                )
+        performLogin(
+            LoginRequest.Password(
+                email = state.emailField.text.trim(),
+                password = state.passwordField.text,
             )
-        }.execute {
-            state.copy(
-                loginRequestState = it
-            )
-        }
-    }
-
-    fun loginWithGoogle(firebaseIdToken: String, firebaseAccessToken: String? = null) {
-        loginWithSocial(
-            provider = SocialProvider.GOOGLE,
-            firebaseIdToken = firebaseIdToken,
-            firebaseAccessToken = firebaseAccessToken,
         )
     }
 
-    fun loginWithFacebook(firebaseIdToken: String, firebaseAccessToken: String? = null) {
-        loginWithSocial(
-            provider = SocialProvider.FACEBOOK,
-            firebaseIdToken = firebaseIdToken,
-            firebaseAccessToken = firebaseAccessToken,
-        )
-    }
-
-    fun loginWithAppleId(firebaseIdToken: String, firebaseAccessToken: String? = null) {
-        loginWithSocial(
-            provider = SocialProvider.APPLE_ID,
-            firebaseIdToken = firebaseIdToken,
-            firebaseAccessToken = firebaseAccessToken,
-        )
-    }
-
-    private fun loginWithSocial(
+    fun loginWithSocial(
         provider: SocialProvider,
         firebaseIdToken: String,
         firebaseAccessToken: String?,
     ) {
         intent {
-            async {
-                loginUseCase(
-                    LoginRequest.Social(
-                        provider = provider,
-                        firebaseIdToken = firebaseIdToken,
-                        firebaseAccessToken = firebaseAccessToken,
-                    )
+            performLogin(
+                LoginRequest.Social(
+                    provider = provider,
+                    firebaseIdToken = firebaseIdToken,
+                    firebaseAccessToken = firebaseAccessToken,
                 )
-            }.execute {
-                state.copy(
-                    loginRequestState = it
-                )
+            )
+        }
+    }
+
+    private suspend fun org.orbitmvi.orbit.syntax.Syntax<LoginState, Nothing>.performLogin(request: LoginRequest) {
+        async {
+            loginUseCase(request)
+        }.handleError {
+            reduce {
+                state.copy(authError = UiText.StringRes(Res.string.login_error_unknown))
             }
+        }.execute { asyncState ->
+            state.copy(
+                loginRequestState = asyncState,
+            )
         }
     }
 }
