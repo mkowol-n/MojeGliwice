@@ -1,6 +1,5 @@
 package pl.nepapp.rasoth.features.login
 
-import kotlinx.coroutines.delay
 import org.koin.core.annotation.KoinViewModel
 import pl.nepapp.rasoth.core.feature.BaseViewModel
 import pl.nepapp.rasoth.core.ui.input.InputFieldState
@@ -15,7 +14,9 @@ data class LoginState(
 )
 
 @KoinViewModel
-class LoginViewModel : BaseViewModel<LoginState, Nothing>(LoginState()) {
+class LoginViewModel(
+    private val loginUseCase: LoginUseCase,
+) : BaseViewModel<LoginState, Nothing>(LoginState()) {
 
     fun login() = intent {
         state.emailField.showErrors()
@@ -27,11 +28,61 @@ class LoginViewModel : BaseViewModel<LoginState, Nothing>(LoginState()) {
 
         reduce { state.copy(isLoading = true) }
 
-        delay(5000)
-        // Simulate API call — in real app this would call a repository
-        // Example of setting a server-side error:
-        // state.emailField.setError(UiText.Raw("Email already exists"))
+        runCatching {
+            loginUseCase(
+                LoginRequest.Password(
+                    email = state.emailField.text.trim(),
+                    password = state.passwordField.text,
+                )
+            )
+        }
 
         reduce { state.copy(isLoading = false) }
+    }
+
+    fun loginWithGoogle(firebaseIdToken: String, firebaseAccessToken: String? = null) = intent {
+        loginWithSocial(
+            provider = SocialProvider.GOOGLE,
+            firebaseIdToken = firebaseIdToken,
+            firebaseAccessToken = firebaseAccessToken,
+        )
+    }
+
+    fun loginWithFacebook(firebaseIdToken: String, firebaseAccessToken: String? = null) = intent {
+        loginWithSocial(
+            provider = SocialProvider.FACEBOOK,
+            firebaseIdToken = firebaseIdToken,
+            firebaseAccessToken = firebaseAccessToken,
+        )
+    }
+
+    fun loginWithAppleId(firebaseIdToken: String, firebaseAccessToken: String? = null) = intent {
+        loginWithSocial(
+            provider = SocialProvider.APPLE_ID,
+            firebaseIdToken = firebaseIdToken,
+            firebaseAccessToken = firebaseAccessToken,
+        )
+    }
+
+    private suspend fun loginWithSocial(
+        provider: SocialProvider,
+        firebaseIdToken: String,
+        firebaseAccessToken: String?,
+    ) {
+        intent {
+            reduce { state.copy(isLoading = true) }
+
+            runCatching {
+                loginUseCase(
+                    LoginRequest.Social(
+                        provider = provider,
+                        firebaseIdToken = firebaseIdToken,
+                        firebaseAccessToken = firebaseAccessToken,
+                    )
+                )
+            }
+
+            reduce { state.copy(isLoading = false) }
+        }
     }
 }

@@ -1,0 +1,25 @@
+package pl.nepapp.rasoth.features.login
+
+data class AuthTokens(
+    val accessToken: String,
+    val refreshToken: String,
+)
+
+sealed interface LoginRequest {
+    data class Password(
+        val email: String,
+        val password: String,
+    ) : LoginRequest
+
+    data class Social(
+        val provider: SocialProvider,
+        val firebaseIdToken: String,
+        val firebaseAccessToken: String? = null,
+    ) : LoginRequest
+}
+
+enum class SocialProvider(val apiValue: String) {
+    GOOGLE("google"),
+    FACEBOOK("facebook"),
+    APPLE_ID("appleid"),
+}

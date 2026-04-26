@@ -8,6 +8,7 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.ksp)
     alias(libs.plugins.koin.compiler)
+    alias(libs.plugins.ktorfit)
 }
 
 kotlin {
@@ -52,6 +53,8 @@ kotlin {
             implementation(libs.jetbrains.navigation3.ui)
             implementation(libs.kotlinx.collections.immutable)
             implementation(libs.kotlin.serialization)
+            implementation(libs.ktor.client.core)
+            implementation(libs.ktor.client.content.negotiation)
             implementation(libs.ktor.serialization.kotlinx.json)
             implementation(libs.kotlinx.datetime)
             implementation(project.dependencies.platform(libs.koin.bom))
@@ -59,7 +62,15 @@ kotlin {
             implementation(libs.koin.compose)
             implementation(libs.koin.compose.viewmodel)
             implementation(libs.koin.annotations)
+            implementation(libs.ktorfit)
 
+//            androidMain {
+//                implementation(libs.ktor.client.okhttp)
+//            }
+//
+//            iosMain {
+//                implementation(libs.ktor.client.darwin)
+//            }
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
