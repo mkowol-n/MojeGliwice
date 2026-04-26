@@ -17,4 +17,8 @@
     <string name="repeat_password_placeholder">Repeat your password</string>
     <string name="passwords_do_not_match">Passwords do not match</string>
     <string name="no_account_prompt">Don\'t have an account?</string>
+    <string name="login_error_invalid_credentials">Invalid email or password</string>
+    <string name="login_error_user_not_found">No account found for this email</string>
+    <string name="login_error_network">Network error. Please try again</string>
+    <string name="login_error_unknown">Could not sign in. Please try again</string>
 </resources>

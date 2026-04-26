@@ -63,17 +63,15 @@ kotlin {
             implementation(libs.koin.compose.viewmodel)
             implementation(libs.koin.annotations)
             implementation(libs.ktorfit)
-
-//            androidMain {
-//                implementation(libs.ktor.client.okhttp)
-//            }
-//
-//            iosMain {
-//                implementation(libs.ktor.client.darwin)
-//            }
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
+        }
+
+        androidMain.dependencies {
+            implementation(project.dependencies.platform(libs.firebase.bom))
+            implementation(libs.firebase.auth)
+            implementation(libs.firebase.crashlytics)
         }
     }
 }

@@ -103,6 +103,15 @@ private fun LoginContent(viewModel: LoginViewModel = koinViewModel()) {
             }
         }
 
+        state.authError?.let { authError ->
+            Spacer(modifier = Modifier.height(12.dp))
+            Text(
+                text = authError.asString(),
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.error,
+            )
+        }
+
         Spacer(modifier = Modifier.height(16.dp))
 
         Row(

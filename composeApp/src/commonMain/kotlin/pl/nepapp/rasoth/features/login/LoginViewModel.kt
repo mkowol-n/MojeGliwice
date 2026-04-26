@@ -1,16 +1,22 @@
 package pl.nepapp.rasoth.features.login
 
 import org.koin.core.annotation.KoinViewModel
+import pl.nepapp.rasoth.core.feature.Async
 import pl.nepapp.rasoth.core.feature.BaseViewModel
+import pl.nepapp.rasoth.core.feature.Uninitialized
+import pl.nepapp.rasoth.core.feature.async
+import pl.nepapp.rasoth.core.ui.UiText
 import pl.nepapp.rasoth.core.ui.input.InputFieldState
 import pl.nepapp.rasoth.core.ui.input.validators.EmailValidator
 import pl.nepapp.rasoth.core.ui.input.validators.PasswordValidator
 
 
 data class LoginState(
+    val loginRequestState: Async<Unit> = Uninitialized,
     val isLoading: Boolean = false,
     val emailField: InputFieldState = InputFieldState(validator = EmailValidator()),
-    val passwordField: InputFieldState = InputFieldState(validator = PasswordValidator())
+    val passwordField: InputFieldState = InputFieldState(validator = PasswordValidator()),
+    val authError: UiText? = null,
 )
 
 @KoinViewModel
@@ -26,21 +32,21 @@ class LoginViewModel(
         val isPasswordValid = state.passwordField.validate()
         if (!isEmailValid || !isPasswordValid) return@intent
 
-        reduce { state.copy(isLoading = true) }
-
-        runCatching {
+        async {
             loginUseCase(
                 LoginRequest.Password(
                     email = state.emailField.text.trim(),
                     password = state.passwordField.text,
                 )
             )
+        }.execute {
+            state.copy(
+                loginRequestState = it
+            )
         }
-
-        reduce { state.copy(isLoading = false) }
     }
 
-    fun loginWithGoogle(firebaseIdToken: String, firebaseAccessToken: String? = null) = intent {
+    fun loginWithGoogle(firebaseIdToken: String, firebaseAccessToken: String? = null) {
         loginWithSocial(
             provider = SocialProvider.GOOGLE,
             firebaseIdToken = firebaseIdToken,
@@ -48,7 +54,7 @@ class LoginViewModel(
         )
     }
 
-    fun loginWithFacebook(firebaseIdToken: String, firebaseAccessToken: String? = null) = intent {
+    fun loginWithFacebook(firebaseIdToken: String, firebaseAccessToken: String? = null) {
         loginWithSocial(
             provider = SocialProvider.FACEBOOK,
             firebaseIdToken = firebaseIdToken,
@@ -56,7 +62,7 @@ class LoginViewModel(
         )
     }
 
-    fun loginWithAppleId(firebaseIdToken: String, firebaseAccessToken: String? = null) = intent {
+    fun loginWithAppleId(firebaseIdToken: String, firebaseAccessToken: String? = null) {
         loginWithSocial(
             provider = SocialProvider.APPLE_ID,
             firebaseIdToken = firebaseIdToken,
@@ -64,15 +70,13 @@ class LoginViewModel(
         )
     }
 
-    private suspend fun loginWithSocial(
+    private fun loginWithSocial(
         provider: SocialProvider,
         firebaseIdToken: String,
         firebaseAccessToken: String?,
     ) {
         intent {
-            reduce { state.copy(isLoading = true) }
-
-            runCatching {
+            async {
                 loginUseCase(
                     LoginRequest.Social(
                         provider = provider,
@@ -80,9 +84,11 @@ class LoginViewModel(
                         firebaseAccessToken = firebaseAccessToken,
                     )
                 )
+            }.execute {
+                state.copy(
+                    loginRequestState = it
+                )
             }
-
-            reduce { state.copy(isLoading = false) }
         }
     }
 }

@@ -3,6 +3,8 @@ plugins {
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.koin.compiler)
+    alias(libs.plugins.google.services)
+    alias(libs.plugins.firebase.crashlytics)
 }
 
 dependencies {
@@ -12,6 +14,8 @@ dependencies {
     implementation(project.dependencies.platform(libs.koin.bom))
     implementation(libs.koin.android)
     implementation(libs.koin.workmanager)
+    implementation(project.dependencies.platform(libs.firebase.bom))
+    implementation(libs.firebase.crashlytics)
 }
 
 android {
@@ -40,4 +44,3 @@ android {
         targetCompatibility = JavaVersion.VERSION_21
     }
 }
-
