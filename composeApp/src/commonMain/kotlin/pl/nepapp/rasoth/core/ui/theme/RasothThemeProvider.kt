@@ -10,7 +10,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.staticCompositionLocalOf
 
 @Composable
-fun RasothThemeProvider(content: @Composable () -> Unit, isDarkTheme: Boolean) {
+fun RasothThemeProvider(isDarkTheme: Boolean, content: @Composable () -> Unit) {
     val colors = remember(isDarkTheme) {
         if(isDarkTheme) {
             darkColors

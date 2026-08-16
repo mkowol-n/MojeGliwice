@@ -22,7 +22,6 @@ dependencies {
     androidTestImplementation(libs.junit.jupiter.api)
     androidTestImplementation(libs.androidx.test.core)
     androidTestImplementation(libs.compose.uiTestAndroid)
-    debugImplementation(libs.compose.uiTestManifest)
 
     testImplementation(platform(libs.junit.bom))
     testImplementation(libs.junit.jupiter.api)
