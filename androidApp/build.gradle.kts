@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.koin.compiler)
     alias(libs.plugins.google.services)
     alias(libs.plugins.firebase.crashlytics)
+    alias(libs.plugins.android.junit5)
 }
 
 dependencies {
@@ -16,6 +17,17 @@ dependencies {
     implementation(libs.koin.workmanager)
     implementation(project.dependencies.platform(libs.firebase.bom))
     implementation(libs.firebase.crashlytics)
+
+    androidTestImplementation(platform(libs.junit.bom))
+    androidTestImplementation(libs.junit.jupiter.api)
+    androidTestImplementation(libs.androidx.test.core)
+    androidTestImplementation(libs.compose.uiTestAndroid)
+    debugImplementation(libs.compose.uiTestManifest)
+
+    testImplementation(platform(libs.junit.bom))
+    testImplementation(libs.junit.jupiter.api)
+    testImplementation(libs.junit.jupiter.params)
+    testRuntimeOnly(libs.junit.jupiter.engine)
 }
 
 android {
@@ -28,6 +40,7 @@ android {
         targetSdk = libs.versions.android.targetSdk.get().toInt()
         versionCode = 1
         versionName = "1.0"
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
     packaging {
         resources {
@@ -54,4 +67,14 @@ android {
         sourceCompatibility = JavaVersion.VERSION_21
         targetCompatibility = JavaVersion.VERSION_21
     }
+
+    testOptions {
+        unitTests.all {
+            it.useJUnitPlatform()
+        }
+    }
+}
+
+junitPlatform {
+    instrumentationTests.includeExtensions.set(true)
 }

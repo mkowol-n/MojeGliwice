@@ -18,14 +18,6 @@ import rasoth.composeapp.generated.resources.firebase_auth_base_error
 private class AndroidSocialAuthClient(private val context: Context) : SocialAuthClient {
     override suspend fun signInWithProvider(provider: SocialProvider): SocialAuthTokens? {
         val auth = FirebaseAuth.getInstance()
-        if (provider == SocialProvider.FACEBOOK) {
-            Toast.makeText(
-                context,
-                getString(Res.string.firebase_auth_base_error),
-                Toast.LENGTH_SHORT
-            ).show()
-            throw SocialAuthFailedException.FacebookLoginRequiresNativeSDKIntegrationException()
-        }
         val authResult = auth.pendingAuthResult?.await() ?: auth.startActivityForSignInWithProvider(
             context as ComponentActivity,
             OAuthProvider.newBuilder(provider.firebaseProvider).build(),

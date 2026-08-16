@@ -21,6 +21,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.ui.unit.dp
@@ -91,6 +92,7 @@ private fun LoginContent(
         Text(
             text = stringResource(Res.string.login_button),
             style = MaterialTheme.typography.headlineMedium,
+            modifier = Modifier.testTag(LoginTestTags.TITLE),
         )
 
         Spacer(modifier = Modifier.height(32.dp))
@@ -100,7 +102,9 @@ private fun LoginContent(
             label = stringResource(Res.string.email_label),
             placeholder = stringResource(Res.string.email_placeholder),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .testTag(LoginTestTags.EMAIL_FIELD),
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -110,14 +114,18 @@ private fun LoginContent(
             label = stringResource(Res.string.password_label),
             placeholder = stringResource(Res.string.password_placeholder),
             isPassword = true,
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .testTag(LoginTestTags.PASSWORD_FIELD),
         )
 
         Spacer(modifier = Modifier.height(24.dp))
 
         Button(
             onClick = { viewModel.login() },
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .testTag(LoginTestTags.LOGIN_BUTTON),
             enabled = !state.isLoading,
         ) {
             if (state.isLoading) {
@@ -145,7 +153,9 @@ private fun LoginContent(
             onClick = {
                 launchProviderLogin(SocialProvider.GOOGLE)
             },
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .testTag(LoginTestTags.GOOGLE_BUTTON),
             contentPadding = contentPadding,
         ) {
             Text(stringResource(Res.string.login_google_button))
@@ -157,7 +167,9 @@ private fun LoginContent(
             onClick = {
                 launchProviderLogin(SocialProvider.FACEBOOK)
             },
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .testTag(LoginTestTags.FACEBOOK_BUTTON),
             contentPadding = contentPadding,
         ) {
             Text(stringResource(Res.string.login_facebook_button))
@@ -169,7 +181,9 @@ private fun LoginContent(
             onClick = {
                 launchProviderLogin(SocialProvider.APPLE_ID)
             },
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .testTag(LoginTestTags.APPLE_BUTTON),
             contentPadding = contentPadding,
         ) {
             Text(stringResource(Res.string.login_apple_button))
@@ -195,7 +209,10 @@ private fun LoginContent(
                 text = stringResource(Res.string.no_account_prompt),
                 style = MaterialTheme.typography.bodyMedium,
             )
-            TextButton(onClick = { navigator?.push(RegistrationScreen) }) {
+            TextButton(
+                onClick = { navigator?.push(RegistrationScreen) },
+                modifier = Modifier.testTag(LoginTestTags.REGISTER_BUTTON),
+            ) {
                 Text(text = stringResource(Res.string.register_button))
             }
         }

@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "157686218738-ramto1671qq4g33p7ila9tkokfob96ro.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "pl.nepapp.rasoth",
+            "certificate_hash": "1a3ead70beb079cb495bae4a6b0c255990803563"
+          }
+        },
+        {
           "client_id": "157686218738-rll7hhu2ju4sjhce60tdhj3343e9o3eq.apps.googleusercontent.com",
           "client_type": 3
         }
