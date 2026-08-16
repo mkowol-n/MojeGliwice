@@ -2,10 +2,8 @@ package pl.nepapp.rasoth.features.dashboard.components
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material3.BottomAppBar
-import androidx.compose.material3.Icon
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -22,7 +20,7 @@ data class BottomNavigationItem(
 fun RasothBottomNavigation(
     items: ImmutableList<BottomNavigationItem>
 ) {
-    Row(modifier = Modifier.fillMaxWidth()) {
+    Row(modifier = Modifier.fillMaxWidth().navigationBarsPadding()) {
         items.forEach {
             RasothBottomAppBarItem(
                 item = it,
