@@ -4,8 +4,11 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
@@ -19,6 +22,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -46,50 +50,47 @@ fun NowTopAppBar(
     progress: Float
 ) {
     val density = LocalDensity.current
+    val p = progress.coerceIn(0f, 1f)
 
-    var myDp: Dp? by remember {
-        mutableStateOf(null)
-    }
+    var mojeWidth by remember { mutableIntStateOf(0) }
+    var boxHeight by remember { mutableIntStateOf(0) }
 
     Row {
         Box(
-            modifier = Modifier
+            modifier = Modifier.onGloballyPositioned {
+                boxHeight = it.size.height
+            }
         ) {
-
             Text(
                 text = "Moje",
                 fontSize = 28.sp,
-                modifier = Modifier.align(Alignment.TopStart).onGloballyPositioned { coordinates ->
-                    val widthDp = with(density) {
-                        coordinates.size.width.toDp()
-                    }
-
-                    myDp = widthDp
+                modifier = Modifier.onGloballyPositioned {
+                    mojeWidth = it.size.width
                 }
             )
 
-            myDp?.let { actualDp ->
-                Column(
-                    modifier = Modifier.align(Alignment.TopStart)
-                ) {
-                    Spacer(modifier = Modifier.height(with(density) { (28.sp * (1f - progress)).toDp() }))
-                    Text(
-                        text = "Gliwice",
-                        fontSize = 28.sp,
-                        modifier = Modifier
-                            .padding(start = actualDp * progress.coerceIn(0f, 1f))
-                    )
-                }
-            }
-
+            Text(
+                text = "Gliwice",
+                fontSize = 28.sp,
+                modifier = Modifier.padding(
+                    start = with(density) {
+                        (mojeWidth * p).toDp()
+                    },
+                    top = with(density) {
+                        (28.sp.toPx() * (1f - p)).toDp()
+                    }
+                )
+            )
         }
-        Image(
-            painter = painterResource(Res.drawable.test_image),
-            contentDescription = null,
-            modifier = Modifier
-                .size(60.dp * (1f - progress))
-                .alpha(1f - progress)
-                .scale(1f - progress)
-        )
+
+        if (boxHeight > 0) {
+            Image(
+                painter = painterResource(Res.drawable.test_image),
+                contentDescription = null,
+                modifier = Modifier
+                    .size(with(density) { boxHeight.toDp() })
+                    .alpha(1f - p)
+            )
+        }
     }
 }
