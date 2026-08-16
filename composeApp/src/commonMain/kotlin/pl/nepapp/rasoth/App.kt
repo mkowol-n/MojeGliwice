@@ -11,7 +11,7 @@ import pl.nepapp.rasoth.features.login.LoginScreen
 @Composable
 fun App() {
     RasothThemeProvider(
-        isDarkTheme = true
+        isDarkTheme = false
     ) {
         NavigationRoot(DashboardScreen)
     }

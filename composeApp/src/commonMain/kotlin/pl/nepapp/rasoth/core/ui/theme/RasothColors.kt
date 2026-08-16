@@ -31,7 +31,7 @@ val darkColors = RasothColors(
     primary = blue,
     textColor = whiteVariant1,
     background = blackVariant1,
-    darkTheme = false,
+    darkTheme = true,
 )
 
 fun materialColors(colors: RasothColors): ColorScheme {
@@ -39,7 +39,7 @@ fun materialColors(colors: RasothColors): ColorScheme {
         return darkColorScheme(
             primary = colors.primary,
             background = colors.background,
-            surface = colors.background
+            surface = colors.background,
         )
     }
     return lightColorScheme(
