@@ -69,6 +69,7 @@ class LoginViewModel(
             reduce {
                 state.copy(authError = UiText.StringRes(Res.string.login_error_unknown))
             }
+            true
         }.execute { asyncState ->
             state.copy(
                 loginRequestState = asyncState,

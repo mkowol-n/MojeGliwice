@@ -12,13 +12,7 @@ interface AsyncContext<STATE : Any, SIDE_EFFECT : Any, RESOURCE : Any> {
         reducer: IntentContext<STATE>.(Async<RESOURCE>) -> STATE,
     )
 
-    fun handleError(errorHandler: suspend (Throwable) -> Unit): AsyncContext<STATE, SIDE_EFFECT, RESOURCE>
-}
+    fun handleError(errorHandler: suspend (Throwable) -> Boolean): AsyncContext<STATE, SIDE_EFFECT, RESOURCE>
+    fun handleHttpError(httpErrorHandler: suspend (code: Int, message: String?) -> Boolean): AsyncContext<STATE, SIDE_EFFECT, RESOURCE>
 
-interface AsyncContextFlow<STATE : Any, SIDE_EFFECT : Any, RESOURCE : Any> {
-    suspend fun execute(
-        reducer: IntentContext<STATE>.(Async<RESOURCE>) -> STATE,
-    )
-
-    fun handleError(errorHandler: suspend (Throwable) -> Unit): AsyncContextFlow<STATE, SIDE_EFFECT, RESOURCE>
 }

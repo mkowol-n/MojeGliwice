@@ -12,7 +12,8 @@ internal class AsyncContextImpl<STATE : Any, SIDE_EFFECT : Any, RESOURCE : Any>(
     private val action: suspend (STATE) -> RESOURCE,
     private val simpleSyntaxContext: Syntax<STATE, SIDE_EFFECT>,
 ) : AsyncContext<STATE, SIDE_EFFECT, RESOURCE> {
-    private var customErrorHandler: (suspend (Throwable) -> Unit)? = null
+    private var customErrorHandler: (suspend (Throwable) -> Boolean)? = null
+    private var httpErrorHandler: (suspend (code: Int, message: String?) -> Boolean)? = null
 
     override suspend fun execute(
         cachedValue: Async<RESOURCE>?,
@@ -29,8 +30,13 @@ internal class AsyncContextImpl<STATE : Any, SIDE_EFFECT : Any, RESOURCE : Any>(
         }
     }
 
-    override fun handleError(errorHandler: suspend (Throwable) -> Unit): AsyncContext<STATE, SIDE_EFFECT, RESOURCE> {
+    override fun handleError(errorHandler: suspend (Throwable) -> Boolean): AsyncContext<STATE, SIDE_EFFECT, RESOURCE> {
         customErrorHandler = errorHandler
+        return this
+    }
+
+    override fun handleHttpError(httpErrorHandler: suspend (code: Int, message: String?) -> Boolean): AsyncContext<STATE, SIDE_EFFECT, RESOURCE> {
+        this.httpErrorHandler = httpErrorHandler
         return this
     }
 }
