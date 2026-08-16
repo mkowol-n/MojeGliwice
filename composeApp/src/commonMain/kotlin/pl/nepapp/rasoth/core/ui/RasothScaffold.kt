@@ -17,6 +17,7 @@ import pl.nepapp.rasoth.core.ui.theme.RasothTheme
 
 @Composable
 fun RasothScaffold(
+    contentWindowInsets: WindowInsets,
     modifier: Modifier = Modifier,
     topBar: @Composable () -> Unit = {},
     bottomBar: @Composable () -> Unit = {},
@@ -24,7 +25,6 @@ fun RasothScaffold(
     floatingActionButton: @Composable () -> Unit = {},
     floatingActionButtonPosition: FabPosition = FabPosition.End,
     innerBackgroundColor: Color = RasothTheme.colors.background,
-    contentWindowInsets: WindowInsets = WindowInsets.safeDrawing,
     content: @Composable BoxScope.() -> Unit,
 ) {
     Scaffold(
